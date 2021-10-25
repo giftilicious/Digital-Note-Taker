@@ -76,15 +76,24 @@ app.post('/api/notes', (req, res) => {
             tip_id: uuid(),
         };
 
-        readAndAppend(newNote, './db.json');
-        res.json(`Note added successfully!`);
+    const noteString = JSON.stringify(newNote);
+
+    fs.writeFile(`./db/${newNote}.json`, noteString, (err) =>
+        err ? console.error(err) : console.log(`Review for ${newNote} has been written to JSON file`)
+    );
+
+    const response = {
+        status: 'success',
+        body: newNote,
+    };
+
+    console.log(response);
+    res.status(201).json(response);
+
     } else {
         res.error('Error in adding note');
     }
 });
-
-
-
 
 
 app.listen(PORT, () =>
